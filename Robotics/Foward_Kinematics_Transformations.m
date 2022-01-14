@@ -67,3 +67,11 @@ q0 = q0_Quaternion(rot);
 
 Q = Quaternion_Transform(q0, rot);
 
+
+%% Test the function
+t = [15.6, 70.4];
+
+DH = [t(1)  0   a(1)    90
+      t(2)  0   a(2)    0];
+Tot = forward_kinematics(t, DH);
+

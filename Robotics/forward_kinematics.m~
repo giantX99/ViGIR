@@ -1,0 +1,14 @@
+function T = forward_kinematics(Qinit, DH)
+
+    n_rows = size(Qinit);
+    T = eye(4);
+    
+    for i = 1:n_rows
+        DH(i,1) = Qinit(i);
+    end
+    
+    for i = 1:n_rows 
+       T = T * Ai_Transform(DH(i,:));
+    end
+    
+end
