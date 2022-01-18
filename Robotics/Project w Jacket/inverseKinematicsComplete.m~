@@ -27,35 +27,35 @@ P_list_predicted = zeros(num_rowsP, num_colmsP+1);
 
 
 
-for j1=1:length(inverses)  %it will loop only once for now
-    for i1=1:length(units) %it will loop only once for now
+    for j1=1:length(inverses)  %it will loop only once for now
+        for i1=1:length(units) %it will loop only once for now
 
-        str_unit_chosen = units(i1);
-        inverse_chosen = inverses(j1);
-
-
-        %% choose the unit to investigate
-        if(str_unit_chosen == "m")                     % choose the m
-            unit_chosen = 1;                           
-        elseif (str_unit_chosen == "dm")               % choose the dm
-            unit_chosen = 10;
-        elseif (str_unit_chosen == "cm")               % choose the cm
-            unit_chosen = 100;
-        elseif (str_unit_chosen == "mm")               % choose the mm
-            unit_chosen = 1000;
-        end       
-% ignore for now
+            str_unit_chosen = units(i1);
+            inverse_chosen = inverses(j1);
 
 
-        %% Specify the chosen values of alpha 
-        indexes = [0.03; 0.06; 0.09; 0.1; 0.2; 0.4; 0.6; 0.8; 1];
-        %indexes = [1];
-        %indexes = [0.03; 0.06; 0.09; 0.1; 0.2; 0.4; 0.6; 0.8; 1];
+            %% choose the unit to investigate
+            if(str_unit_chosen == "m")                     % choose the m
+                unit_chosen = 1;                           
+            elseif (str_unit_chosen == "dm")               % choose the dm
+                unit_chosen = 10;
+            elseif (str_unit_chosen == "cm")               % choose the cm
+                unit_chosen = 100;
+            elseif (str_unit_chosen == "mm")               % choose the mm
+                unit_chosen = 1000;
+            end       
+    % ignore for now
 
-        %% Run through the program
-        for j = 1:length(indexes) %it will loop only once for now
 
-            for p = 1:num_rowsP %start reading P_list[]
+            %% Specify the chosen values of alpha 
+            indexes = [0.03; 0.06; 0.09; 0.1; 0.2; 0.4; 0.6; 0.8; 1];
+            %indexes = [1];
+            %indexes = [0.03; 0.06; 0.09; 0.1; 0.2; 0.4; 0.6; 0.8; 1];
+
+            %% Run through the program
+            for j = 1:length(indexes) %it will loop only once for now
+                
+                for p = 1:num_rowsP %start reading P_list[]
                 %% provide the initial joint configuration, the DH, and the desired pose
                 if(strcmp(robot, 'RR'))
                     Q_initial = [0; 0]; %% from base position 
@@ -75,7 +75,7 @@ for j1=1:length(inverses)  %it will loop only once for now
                 D_estimated         = zeros(length(D_final), 1);
                 delta_Q             = zeros(length(Q_initial), 1);
                 J                   = zeros(length(D_final), length(Q_initial));
-                position_error      = 0.01 * unit_chosen;  % setting the accepted error to 1mm
+                position_error      = 0.001 * unit_chosen;  % setting the accepted error to 1mm
                 orientation_error   = 0.1;
                 iterations          = 10000; 
 
@@ -214,24 +214,20 @@ for j1=1:length(inverses)  %it will loop only once for now
                 toc %finishes recording time
                 elapsedTime = toc;
 
-                P_list_predicted(p,:) = [D_current ; i];
-                
-                
-            end % loop through the points \
-            
-            varNames = {'x_p', 'y_p', 'iteration'};
-            dataset_t = table(P_list_predicted(:,1),P_list_predicted(:,2), P_list_predicted(:,3), ...
-                'VariableNames',varNames);
 
-            writetable(dataset_t,strcat(num2str(alpha),'_numerical_ik_predictions.csv'),'Delimiter',',')
+            end % end for loop multiple alphas
 
-        end % end for loop multiple alphas
+        end
     end
     
     
-       
+    P_list_predicted(p,:) = [D_current ; i];   
     
-
+    varNames = {'x_p', 'y_p', 'iteration'};
+    dataset_t = table(P_list_predicted(:,1),P_list_predicted(:,2), P_list_predicted(:,3), ...
+        'VariableNames',varNames);
+    
+    writetable(dataset_t,'numerical_ik_predictions.csv','Delimiter',',')
 
 end %end reading from P_list[]
 
