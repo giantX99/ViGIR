@@ -13,7 +13,7 @@ from RPLCD.i2c import CharLCD
 
 #setup:
 def lcd_setup():
-    lcd = CharLCD('PCF8574', ) #The correct i2c_expander from our lcd display is PCF8574T however RPLCD doesnt support the T in the end...
+    lcd = CharLCD('PCF8574', 0x27) #The correct i2c_expander from our lcd display is PCF8574T however RPLCD doesnt support the T in the end...
     lcd.clear()
     lcd.cursor_mode = 'hide'
     lcd.cursor_pos = (0,3)
