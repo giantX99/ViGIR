@@ -60,7 +60,7 @@ def lcd_feedback(csv_file):
                 print('camera[{status}] = N')
                 lcd.write_string('N')
         if camera_status.count('0') is False:
-            time.sleep(4)
+            time.sleep(10)
             lcd.clear()
             lcd.wirte_string('Capture Success!')
     lcd.close(clear = True)
